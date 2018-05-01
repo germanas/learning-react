@@ -19,17 +19,34 @@ const list = [
     points: 5,
     objectID: 1
   },
+  {
+    title: 'Meow',
+    url: 'https://github.com/reactjs/meow',
+    author: 'Germanas LAtvaitis',
+    num_comments: 12,
+    points: 55,
+    objectID: 2
+  },
 ];
+
+function isSearched(searchTerm) {
+  return function(item) {
+// some condition which returns true or false
+    return item.title.toLowerCase().includes(searchTerm.toLowerCase());
+  }
+}
 
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      list
+      list,
+      searchTerm: ''
     };
     this.onDismiss = this.onDismiss.bind(this);
     this.onReset = this.onReset.bind(this);
+    this.onSearchChange = this.onSearchChange.bind(this);
   }
   onDismiss(id) {
     function isNotId(item) {
@@ -42,6 +59,9 @@ class App extends Component {
   onReset(id) {
     this.setState({ list: list });
   }
+  onSearchChange(event) {
+    this.setState({ searchTerm: event.target.value });
+  }
 
   render() {
     return (
@@ -53,7 +73,14 @@ class App extends Component {
           Reset
           </button>
 
-        {this.state.list.map(item =>
+          <form>
+            <input
+            type="text"
+            onChange={this.onSearchChange}
+            />
+          </form>
+
+        {this.state.list.filter(isSearched(this.state.searchTerm)).map(item =>
           <div key={item.objectID}>
           <span>
             <a href={item.url}>{item.title}</a>
